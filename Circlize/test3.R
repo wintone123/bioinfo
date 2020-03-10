@@ -1,4 +1,4 @@
-arrange_gene <- function(df) {
+arrange_genes <- function(df) {
     df_from <- df %>% group_by(gene1, position1) %>% summarise(counts = sum(counts))
     df_to <- df %>% group_by(gene2, position2) %>% summarise(counts = sum(counts))
     df_out <- data.frame(gene = append(df_from$gene1, df_to$gene2),
@@ -11,7 +11,7 @@ arrange_gene <- function(df) {
 }
 
 
-links <- function(df) {
+arrange_links <- function(df) {
     df_out <- select(df, c(1,2,5)) 
     df_out$from1 <- as.numeric(df$position1) + sample(100, nrow(df), replace = TRUE)
     df_out$to1 <- df_out$from1
@@ -30,9 +30,8 @@ interaction_graph <- function(genome, links) {
                                 panel.fun = function(region, value, ...) {
                                   for (i in seq_len(nrow(region))) {
                                     reg <- region[i,]
-                                    val <- value[i,] / sum(value[1])
-                                    circos.genomicRect(reg, val, ybottom = 0, ytop = val, border = '#ffffffff', 
-                                                       col = '#ff0000ff')
+                                    val <- value[i,] / max(value[1])
+                                    circos.genomicRect(reg, val, ybottom = 0, ytop = val, border = '#00000090')
                                   }
                                 })
   # genome tracks
@@ -48,5 +47,5 @@ interaction_graph <- function(genome, links) {
   # genome links
   circos.genomicLink(links[1:3], links[4:6], 
                      col = ifelse(links$counts / sum(links$counts) >= 0.01, '#ff0077de', '#008cffce'), 
-                     lwd = 0.5)
+                     lwd = 0.7)
 }
