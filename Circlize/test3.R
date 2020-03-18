@@ -1,3 +1,7 @@
+library(tidyverse)
+library(circlize)
+
+
 arrange_genes <- function(df) {
     df_from <- df %>% group_by(gene1, position1) %>% summarise(counts = sum(counts))
     df_to <- df %>% group_by(gene2, position2) %>% summarise(counts = sum(counts))
@@ -6,7 +10,7 @@ arrange_genes <- function(df) {
                          counts = as.numeric(append(df_from$counts, df_to$counts)),
                          stringsAsFactors = FALSE)
     df_out$to <- df_out$from + 100
-    df_out <- select(df_out, c(1,2,4,3))
+    df_out <- select(df_out, c(1, 2, 4, 3))
     return(df_out)
 }
 
